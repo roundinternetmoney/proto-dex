@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/roundinternetmoney/protocolbuffers;protocolbuffers";
+option go_package = "github.com/roundinternetmoney/pb-go;pb";
 
 package ethereal.v1;
 
@@ -63,8 +63,8 @@ message Ticker {
 }
 
 message TradeFill {
-    string e = 1;
-    int64 t = 2;    
+    string e = 1; // event
+    int64 t = 2; // epoch
     message Data {
         string s = 1;
         int64 t = 2;
@@ -81,8 +81,8 @@ message TradeFill {
 }
 
 message SubaccountLiquidation {
-    string e = 1;
-    int64 t = 2;     
+    string e = 1; // event
+    int64 t = 2; // epoch
     message Data {
         string sid = 1;
         int64 t = 2;        
@@ -97,8 +97,8 @@ message SubaccountLiquidation {
 }
 
 message PositionUpdate {
-    string e = 1;
-    int64 t = 2;      
+    string e = 1; // event
+    int64 t = 2; // epoch
     message Data {
         int64 t = 1;
         message Update {
@@ -119,8 +119,8 @@ message PositionUpdate {
 }
 
 message OrderUpdate {
-    string e = 1;
-    int64 t = 2;        
+    string e = 1; // event
+    int64 t = 2; // epoch
     message Data {
         int64 t = 1;
         message Update {
@@ -155,8 +155,8 @@ message OrderUpdate {
 }
 
 message OrderFill {
-    string e = 1;
-    int64 t = 2;   
+    string e = 1; // event
+    int64 t = 2; // epoch
     message Data {
         int64 t = 1;
         message Fill {
@@ -180,8 +180,8 @@ message OrderFill {
 }
 
 message TokenTransfer {
-    string e = 1;
-    int64 t = 2;     
+    string e = 1; // event
+    int64 t = 2; // epoch
     message Data {
         string id = 1;
         string sid = 2;
@@ -202,7 +202,7 @@ message TokenTransfer {
 }
 
 message EventMessage {
-    string e = 1;
+    string e = 1; // event
 }
 
 message WebsocketStatus {

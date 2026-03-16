@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/roundinternetmoney/protocolbuffers;protocolbuffers";
+option go_package = "github.com/roundinternetmoney/pb-go;pb";
 
 package aster.v1;
 
@@ -8,7 +8,7 @@ message StreamMessage {
   string stream = 1;
   bytes data = 2;
 }
-//TODO: Account Information V4 (USER_DATA 
+//TODO: Account Information V4 (USER_DATA) 
 
 message ExchangeInfo {
   repeated Symbol symbols = 1;

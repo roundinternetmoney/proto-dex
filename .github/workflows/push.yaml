@@ -7,13 +7,13 @@ on:
       - '**.proto'
       - '**/buf.yaml'
       - '**/buf.lock'
-      - '**/buf.md'
+      - '**/Makefile'
       - '**/README.md'
       - '**/LICENSE'
   delete:    
 permissions:
   contents: read
-  pull-requests: write  
+  pull-requests: write
 jobs:
   buf:
     runs-on: ubuntu-latest
@@ -22,5 +22,4 @@ jobs:
       - uses: bufbuild/buf-action@v1
         with:
           token: ${{ secrets.BUF_TOKEN }}
-          breaking: false
           pr_comment: false
