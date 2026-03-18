@@ -3,7 +3,6 @@ syntax = "proto3";
 option go_package = "github.com/roundinternetmoney/proto-dex;pb";
 
 package ethereal.v1;
-
 enum Side {
     SIDE_UNSPECIFIED = 0;
     SIDE_BUY = 1; // offer with bids
@@ -14,4 +13,10 @@ enum OrderType {
     ORDER_TYPE_UNSPECIFIED = 0;
     ORDER_TYPE_LIMIT = 1; // limit
     ORDER_TYPE_MARKET = 2; // market
+}
+
+enum OrderEngine {
+    ORDER_ENGINE_UNSPECIFIED = 0;
+    ORDER_ENGINE_PERP = 1;
+    ORDER_ENGINE_SPOT = 2;    
 }
