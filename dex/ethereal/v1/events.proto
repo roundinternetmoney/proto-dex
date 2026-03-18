@@ -4,7 +4,18 @@ option go_package = "github.com/roundinternetmoney/proto-dex;pb";
 
 package ethereal.v1;
 
+import "ethereal/v1/order.proto";
 import "google/protobuf/struct.proto";
+
+
+message EventMessage {
+    string e = 1; // event
+}
+
+message WebsocketStatus {
+    bool ok = 1;
+    string code = 2;
+}
 
 enum EventType {
   EVENT_TYPE_EVENT_UNSPECIFIED = 0;
@@ -16,18 +27,6 @@ enum EventType {
   EVENT_TYPE_ORDER_UPDATE = 6; // OrderUpdate
   EVENT_TYPE_ORDER_FILL = 7; // OrderFill
   EVENT_TYPE_TOKEN_TRANSFER = 8; // TokenTransfer
-}
-
-enum Side {
-    SIDE_UNSPECIFIED = 0;
-    SIDE_BUY = 1; // offer with bids
-    SIDE_SELL = 2; // offer with asks
-}
-
-enum OrderType {
-    ORDER_TYPE_UNSPECIFIED = 0;
-    ORDER_TYPE_LIMIT = 1; // limit
-    ORDER_TYPE_MARKET = 2; // market
 }
 
 message L2Book {
@@ -199,13 +198,4 @@ message TokenTransfer {
         optional string lz_eid = 14;
     }
     Data data = 3;
-}
-
-message EventMessage {
-    string e = 1; // event
-}
-
-message WebsocketStatus {
-    bool ok = 1;
-    string code = 2;
 }

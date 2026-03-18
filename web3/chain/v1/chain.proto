@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/roundinternetmoney/proto-web3;pb";
+
+package chain.v1;
+
+enum Chain {
+  CHAIN_UNSPECIFIED = 0;
+  CHAIN_ETHEREUM = 1;
+  CHAIN_ARBITRUM = 2;
+  CHAIN_BINANCE = 3;
+  CHAIN_BASE = 4;
+  CHAIN_ETHEREAL = 5;
+  CHAIN_ASTER = 6;
+}
+
+message ChainEnvelope {
+  Chain exchange = 1;
+  uint64 sequence = 2;
+  int64 ts = 3;
+  oneof payload {
+    string temp = 4;
+  }
+}
