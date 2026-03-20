@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "roundinternet.money/proto-dex/gen/dex/aster/v1;pb";
+option go_package = "roundinternet.money/protos/gen/dex/aster/v1;pb";
 
 package dex.aster.v1;
 

@@ -5,7 +5,7 @@
 ## Getting started
 
 - Requires Go 1.25+.
-- Install from GitHub: `go get github.com/roundinternetmoney/pb-dex`
+- Install from GitHub: `go get github.com/roundinternetmoney/protos`
 
 ## Example Usage
 
