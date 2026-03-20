@@ -1,16 +1,44 @@
-.PHONY: examples buf all version tag release
+.PHONY: examples diff_iterator nats_asset_server nats_asset_client asset_compare pb buf all version tag release
 
 LATEST_TAG := $(shell git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || echo v0.0.0)
 VERSION := $(patsubst v%,%,$(LATEST_TAG))
 PATCH_VERSION := $(shell echo $(VERSION) | awk -F. '{printf "%d.%d.%d", $$1, $$2, $$3+1}')
 NEW_VERSION ?= $(PATCH_VERSION)
 
+examples: diff_iterator nats_asset_server nats_asset_client asset_compare
+
+asset_compare:
+	go build -o bin/asset_compare examples/asset_compare/main.go
+
+diff_iterator:
+	go build -o bin/diff_iterator examples/diff_iterator/main.go
+
+nats_asset_server:
+	go build -o bin/nats_asset_server examples/nats_asset_server/main.go
+
+nats_asset_client:
+	go build -o bin/nats_asset_client examples/nats_asset_client/main.go
+
+
 buf:
 	buf dep update
 	buf lint
 	buf build
 
-all: buf	
+generate:
+	buf generate
+
+pb:
+	go mod tidy
+	go fmt ./...
+	go vet ./...
+	go test ./...
+	go build ./...
+
+
+all: buf generate pb examples
+
+push: buf
 	buf push
 
 version:
