@@ -65,7 +65,7 @@ message Ticker {
 message TradeFill {
     string e = 1; // event
     int64 t = 2; // epoch
-    message Data {
+    message Fill {
         string s = 1;
         int64 t = 2;
         message Fill {
@@ -75,7 +75,7 @@ message TradeFill {
             dex.base.order_enum.v1.Side sd = 4;
             repeated string sids = 5; // [taker maker]
         }    
-        repeated Fill fills = 3;
+        repeated Fill d = 3;
     }
     Data data = 3;
 }
