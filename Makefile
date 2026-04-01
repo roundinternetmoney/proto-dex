@@ -39,8 +39,8 @@ protoc-nats:
 #	latest version build command, but chucked streaming is currently unused and breaks imports on generation. 
 # 	cd protoc-nats/extensions/proto && \ 
 # 	buf generate --template buf.gen.yaml --path natsmicro/options.proto
-	cd protoc-nats && \
-	buf generate --path extensions/proto/natsmicro/options.proto
+	cd protoc-nats/ && \
+	buf generate --template buf.gen.yaml --path extensions/proto/natsmicro/options.proto
 	cp protoc-nats/gen/nats/micro/options.pb.go protoc-nats/tools/protoc-gen-nats-micro/nats/micro/options.pb.go
 	cd protoc-nats && \
 	go build -o tools/protoc-gen-nats-micro/protoc-gen-nats-micro ./tools/protoc-gen-nats-micro/
