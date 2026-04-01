@@ -38,12 +38,10 @@ func main() {
 
 	fmt.Printf("Asset lists equal: %v\n", three.Eq(four))
 
-	five := &basev1.DexAssetResponse{
-		A: []*basev1.Asset{one, one, one, one},
-	}
-	six := &basev1.DexAssetResponse{
-		A: []*basev1.Asset{two, two, two, },
+	// intentional failure, change the length of the list
+	four = &basev1.DexAssetResponse{
+		A: []*basev1.Asset{two, two, two},
 	}
 
-	fmt.Printf("Asset lists equal: %v\n", five.Eq(six))	
+	fmt.Printf("Asset lists equal: %v\n", three.Eq(four))
 }
