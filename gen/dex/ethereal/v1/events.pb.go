@@ -863,7 +863,7 @@ type TradeFill_Data struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	S             string                 `protobuf:"bytes,1,opt,name=s,proto3" json:"s,omitempty"`
 	T             int64                  `protobuf:"varint,2,opt,name=t,proto3" json:"t,omitempty"`
-	Fills         []*TradeFill_Data_Fill `protobuf:"bytes,3,rep,name=fills,proto3" json:"fills,omitempty"`
+	D             []*TradeFill_Data_Fill `protobuf:"bytes,3,rep,name=d,proto3" json:"d,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -912,9 +912,9 @@ func (x *TradeFill_Data) GetT() int64 {
 	return 0
 }
 
-func (x *TradeFill_Data) GetFills() []*TradeFill_Data_Fill {
+func (x *TradeFill_Data) GetD() []*TradeFill_Data_Fill {
 	if x != nil {
-		return x.Fills
+		return x.D
 	}
 	return nil
 }
@@ -1951,15 +1951,15 @@ const file_dex_ethereal_v1_events_proto_rawDesc = "" +
 	"\f_mark_px_24hB\x05\n" +
 	"\x03_oiB\a\n" +
 	"\x05_fr1hB\t\n" +
-	"\a_vol24h\"\xb7\x02\n" +
+	"\a_vol24h\"\xaf\x02\n" +
 	"\tTradeFill\x12\f\n" +
 	"\x01e\x18\x01 \x01(\tR\x01e\x12\f\n" +
 	"\x01t\x18\x02 \x01(\x03R\x01t\x123\n" +
-	"\x04data\x18\x03 \x01(\v2\x1f.dex.ethereal.v1.TradeFill.DataR\x04data\x1a\xd8\x01\n" +
+	"\x04data\x18\x03 \x01(\v2\x1f.dex.ethereal.v1.TradeFill.DataR\x04data\x1a\xd0\x01\n" +
 	"\x04Data\x12\f\n" +
 	"\x01s\x18\x01 \x01(\tR\x01s\x12\f\n" +
-	"\x01t\x18\x02 \x01(\x03R\x01t\x12:\n" +
-	"\x05fills\x18\x03 \x03(\v2$.dex.ethereal.v1.TradeFill.Data.FillR\x05fills\x1ax\n" +
+	"\x01t\x18\x02 \x01(\x03R\x01t\x122\n" +
+	"\x01d\x18\x03 \x03(\v2$.dex.ethereal.v1.TradeFill.Data.FillR\x01d\x1ax\n" +
 	"\x04Fill\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x0e\n" +
 	"\x02px\x18\x02 \x01(\tR\x02px\x12\x0e\n" +
@@ -2158,7 +2158,7 @@ var file_dex_ethereal_v1_events_proto_depIdxs = []int32{
 	23, // 8: dex.ethereal.v1.TokenTransfer.data:type_name -> dex.ethereal.v1.TokenTransfer.Data
 	25, // 9: dex.ethereal.v1.L2Book.Data.a:type_name -> google.protobuf.ListValue
 	25, // 10: dex.ethereal.v1.L2Book.Data.b:type_name -> google.protobuf.ListValue
-	14, // 11: dex.ethereal.v1.TradeFill.Data.fills:type_name -> dex.ethereal.v1.TradeFill.Data.Fill
+	14, // 11: dex.ethereal.v1.TradeFill.Data.d:type_name -> dex.ethereal.v1.TradeFill.Data.Fill
 	26, // 12: dex.ethereal.v1.TradeFill.Data.Fill.sd:type_name -> dex.base.order_enum.v1.Side
 	16, // 13: dex.ethereal.v1.SubaccountLiquidation.Data.p:type_name -> dex.ethereal.v1.SubaccountLiquidation.Data.Liquidation
 	18, // 14: dex.ethereal.v1.PositionUpdate.Data.d:type_name -> dex.ethereal.v1.PositionUpdate.Data.Update
