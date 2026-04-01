@@ -15,7 +15,7 @@ package main
 import (
 	"fmt"
 
-	"roundinternet.money/pb-dex"
+	pb "roundinternet.money/protos/gen/dex/base/v1"
 )
 
 func main() {
