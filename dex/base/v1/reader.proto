@@ -8,7 +8,7 @@ import "dex/base/v1/base.proto";
 import "dex/base/status/v1/status.proto";
 import "natsmicro/options.proto";
 
-// provide real-time updates from DEXes
+// provide real-time updates from decentralised exchanges
 service ReaderService {
   option (natsmicro.service) = {
     subject_prefix : "reader"
@@ -16,7 +16,7 @@ service ReaderService {
     version : "0.0.1"
   };
 
-  // stream asset updates to consumers
+  // DexAsset retrieves a snapshot of assets from specified decentralized exchanges
   rpc DexAsset(DexAssetRequest) returns (DexAssetResponse) {
     option (natsmicro.endpoint) = {
       metadata: {
@@ -27,37 +27,28 @@ service ReaderService {
     };
   };
 
-//   // stream asset updates to consumers
-//   rpc Asset(AssetRequest) returns (AssetResponse) {}
-//   // stream margin updates to consumers
-//   rpc Margin(MarginRequest) returns (MarginResponse) {}
-//   // stream position updates to consumers
-//   rpc Position(PositionRequest) returns (PositionResponse) {}
-//   // stream diff updates to consumers
-//   rpc Diff(DiffRequest) returns (DiffResponse) {}
-//   // stream mids updates to consumers
-//   rpc Mids(MidsRequest) returns (MidsResponse) {}
+  // Long-lived streaming RPCs
+  // Each provides continuous updates for a data type
 
-  // long-lived streams
-  // stream asset updates to consumers
+  // continuously stream asset updates
   rpc StreamAsset(StreamAssetRequest) returns (stream StreamAssetResponse) {}
-  // stream margin updates to consumers -- long lived
+  // continuously stream margin updates
   rpc StreamMargin(StreamMarginRequest) returns (stream StreamMarginResponse) {}
-  // stream position updates to consumers -- long lived
+  // continuously stream position updates
   rpc StreamPosition(StreamPositionRequest) returns (stream StreamPositionResponse) {}
-  // stream diff updates to consumers -- long lived
+  // continuously stream order book differences
   rpc StreamDiff(StreamDiffRequest) returns (stream StreamDiffResponse) {}
-  // stream mids updates to consumers -- long lived
+  // continuously stream mid-price updates
   rpc StreamMids(StreamMidsRequest) returns (stream StreamMidsResponse) {}
 
-  // stream updates to consumers
+  // provide a unified stream of multiple types (assets, margins, positions, diffs, and mids) based on filter criteria
   rpc Stream(StreamRequest) returns (stream StreamResponse) {};
 
-  // allow internal producers to stream messages, ideally consumed as a batch.
+  // internal producers to submit streaming data that should be batched and processed
   rpc Upstream(stream UpstreamRequest) returns (UpstreamResponse) {};
 
-  // allow internal producers to stream messages, while depending reader streams.
-  // useful if multiple binaries are required to submit all payload kinds, but one reader stream is desired. 
+  // Downstream aggregates submissions from multiple sources, allowing one unified reader stream
+  // even when different binaries handle different payload types
   rpc Downstream(stream DownstreamRequest) returns (stream DownstreamResponse) {};
 }
 
