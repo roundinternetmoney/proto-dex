@@ -1,2 +1,6 @@
-bin
+# local binary artifacts
+bin/
 bin/*
+
+# protoc nats build output
+protoc-nats/tools/protoc-gen-nats-micro/protoc-gen-nats-micro

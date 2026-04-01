@@ -3,6 +3,8 @@ version: v2
 modules:
   - path: .
     name: buf.build/round-internet-money/dex
+    excludes:
+      - protoc-nats/
 deps:
   - buf.build/protocolbuffers/wellknowntypes
   - buf.build/toyz/natsmicro

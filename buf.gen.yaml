@@ -5,8 +5,10 @@ plugins:
   - local: protoc-gen-go
     out: gen
     opt: paths=source_relative
-  - local: protoc-gen-nats-micro
+  - local: ./protoc-nats/tools/protoc-gen-nats-micro/protoc-gen-nats-micro
     out: gen
     opt: paths=source_relative    
 inputs:
   - directory: .
+    exclude_paths:
+      - protoc-nats/**/*.proto

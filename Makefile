@@ -1,4 +1,4 @@
-.PHONY: examples diff_iterator nats_asset_server nats_asset_client asset_compare pb buf all version tag release
+.PHONY: examples diff_iterator nats_asset_server nats_asset_client asset_compare protoc-nats pb buf all version tag release
 
 LATEST_TAG := $(shell git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || echo v0.0.0)
 VERSION := $(patsubst v%,%,$(LATEST_TAG))
@@ -35,8 +35,10 @@ pb:
 	go test ./...
 	go build ./...
 
+protoc-nats:
+	go build -o protoc-nats/tools/protoc-gen-nats-micro/protoc-gen-nats-micro ./protoc-nats/tools/protoc-gen-nats-micro/
 
-all: buf generate pb examples
+all: buf protoc-nats generate pb examples
 
 push: buf
 	buf push

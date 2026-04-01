@@ -1,0 +1,3 @@
+[submodule "protoc-nats"]
+	path = protoc-nats
+	url = https://github.com/Toyz/protoc-gen-nats-micro

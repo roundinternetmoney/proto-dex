@@ -1,4 +1,5 @@
 module roundinternet.money/protos
+
 go 1.25.3
 
 require (
