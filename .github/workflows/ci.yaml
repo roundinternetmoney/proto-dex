@@ -40,5 +40,8 @@ jobs:
       - name: lint
         run: make buf
 
+      - name: protoc-nats-micro
+        run: make protoc-nats  
+
       - name: build
         run: make generate
