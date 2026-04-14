@@ -1,0 +1,303 @@
+syntax = "proto3";
+
+option go_package = "roundinternet.money/protos/gen/dex/hub/v1;hubpb";
+
+package dex.hub.v1;
+
+import "dex/base/v1/base.proto";
+import "dex/base/status/v1/status.proto";
+import "natsmicro/options.proto";
+
+// HubService aggregates cross-venue market state, risk, and policy outputs for LP consumers.
+service HubService {
+  option (natsmicro.service) = {
+    subject_prefix: "hub"
+    name: "dex_hub_service"
+    version: "0.2.0"
+  };
+
+  rpc StreamFairValue(StreamFairValueRequest) returns (stream StreamFairValueResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "stream" }
+      timeout: { seconds: 0 }
+    };
+  };
+
+  rpc StreamBook(StreamBookRequest) returns (stream StreamBookResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "stream" }
+      timeout: { seconds: 0 }
+    };
+  };
+
+  rpc StreamRisk(StreamRiskRequest) returns (stream StreamRiskResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "stream" }
+      timeout: { seconds: 0 }
+    };
+  };
+
+  rpc StreamPolicy(StreamPolicyRequest) returns (stream StreamPolicyResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "stream" }
+      timeout: { seconds: 0 }
+    };
+  };
+
+  rpc SubmitIntent(SubmitIntentRequest) returns (SubmitIntentResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "write" }
+      timeout: { seconds: 5 }
+    };
+  };
+
+  rpc ReportFill(ReportFillRequest) returns (ReportFillResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "write" }
+      timeout: { seconds: 5 }
+    };
+  };
+
+  rpc ReportOrderUpdate(ReportOrderUpdateRequest) returns (ReportOrderUpdateResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "write" }
+      timeout: { seconds: 5 }
+    };
+  };
+}
+
+// HubAdminService exposes operational controls (kill switches, config hot-reload hooks).
+service HubAdminService {
+  option (natsmicro.service) = {
+    subject_prefix: "hub_admin"
+    name: "dex_hub_admin"
+    version: "0.2.0"
+  };
+
+  rpc SetKillSwitch(SetKillSwitchRequest) returns (SetKillSwitchResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "admin" }
+      timeout: { seconds: 3 }
+    };
+  };
+
+  rpc GetKillSwitch(GetKillSwitchRequest) returns (GetKillSwitchResponse) {
+    option (natsmicro.endpoint) = {
+      metadata: { key: "operation" value: "read" }
+      timeout: { seconds: 3 }
+    };
+  };
+}
+
+// --- Fair value ---
+
+message StreamFairValueRequest {
+  repeated string symbols = 1;
+}
+
+message StreamFairValueResponse {
+  uint64 schema_version = 1;
+  int64 ts_unix_nano = 2;
+  string symbol = 3;
+  double fair_px = 4;
+  double ref_px = 5;
+  repeated VenueMid contributors = 6;
+}
+
+message VenueMid {
+  dex.base.v1.Dex dex = 1;
+  string venue = 2;
+  string account_id = 3;
+  double px = 4;
+}
+
+// --- Books ---
+
+message StreamBookRequest {
+  repeated string symbols = 1;
+}
+
+message StreamBookResponse {
+  uint64 schema_version = 1;
+  int64 ts_unix_nano = 2;
+  string symbol = 3;
+  uint64 sequence = 4;
+  repeated TaggedBookLevel bids = 5;
+  repeated TaggedBookLevel asks = 6;
+}
+
+message TaggedBookLevel {
+  string price = 1;
+  string size = 2;
+  dex.base.v1.Dex dex = 3;
+  string venue = 4;
+}
+
+// --- Risk ---
+
+message StreamRiskRequest {
+  bool include_accounts = 1;
+}
+
+message StreamRiskResponse {
+  uint64 schema_version = 1;
+  int64 ts_unix_nano = 2;
+  HubKillSwitchState kill = 3;
+  double global_notional_usd = 4;
+  map<string, AccountRisk> by_account = 5;
+  BTCCrossVenueRisk btc_cross_venue = 6;
+}
+
+message AccountRisk {
+  string venue = 1;
+  string account_id = 2;
+  double notional_usd = 3;
+  double margin_headroom_frac = 4;
+}
+
+// Generalization of legacy BTC cross-venue gate JSON (see vibe BTCCrossVenueGate subject).
+message BTCCrossVenueRisk {
+  bool ethereal_deploy_ok = 1;
+  bool aster_margin_ok = 2;
+  double aster_available_margin_usd = 3;
+  double ethereal_equity_utilization = 4;
+  string note = 5;
+}
+
+// --- Policy (spread, vol, bias, stat-arb knobs) ---
+
+message StreamPolicyRequest {
+  repeated string symbols = 1;
+}
+
+message StreamPolicyResponse {
+  uint64 schema_version = 1;
+  int64 ts_unix_nano = 2;
+  string symbol = 3;
+  double half_spread_bps = 4;
+  double vol_ewma_bps = 5;
+  double bias = 6;
+  StatArbHints stat_arb = 7;
+}
+
+message StatArbHints {
+  double target_btc_hedge_scale = 1;
+  double z_score = 2;
+}
+
+message StatArbLegConfig {
+  string symbol = 1;
+  double weight = 2;
+  double hedge_ratio = 3;
+}
+
+message SpreadPolicy {
+  double base_half_spread_bps = 1;
+  double vol_multiplier = 2;
+}
+
+message RiskLimits {
+  double max_global_notional_usd = 1;
+  double max_account_notional_usd = 2;
+  double max_symbol_notional_usd = 3;
+}
+
+// --- Intents & fills (idempotent command path) ---
+
+enum IntentKind {
+  INTENT_KIND_UNSPECIFIED = 0;
+  INTENT_KIND_PLACE = 1;
+  INTENT_KIND_CANCEL = 2;
+  INTENT_KIND_REPLACE = 3;
+}
+
+enum IntentStatus {
+  INTENT_STATUS_UNSPECIFIED = 0;
+  INTENT_STATUS_ACCEPTED = 1;
+  INTENT_STATUS_REJECTED = 2;
+  INTENT_STATUS_DUPLICATE = 3;
+}
+
+message SubmitIntentRequest {
+  string idempotency_key = 1;
+  IntentKind kind = 2;
+  dex.base.v1.Dex dex = 3;
+  string venue = 4;
+  string account_id = 5;
+  string symbol = 6;
+  string client_order_id = 7;
+  optional double price = 8;
+  optional double size = 9;
+  optional string side = 10;
+}
+
+message SubmitIntentResponse {
+  dex.base.status.v1.Status status = 1;
+  IntentStatus intent_status = 2;
+  string dedupe_key = 3;
+}
+
+message ReportFillRequest {
+  string idempotency_key = 1;
+  dex.base.v1.Dex dex = 2;
+  string venue = 3;
+  string account_id = 4;
+  string symbol = 5;
+  string order_id = 6;
+  double fill_px = 7;
+  double fill_sz = 8;
+  int64 ts_unix_nano = 9;
+}
+
+message ReportFillResponse {
+  dex.base.status.v1.Status status = 1;
+  bool duplicate = 2;
+}
+
+enum OrderUpdateKind {
+  ORDER_UPDATE_KIND_UNSPECIFIED = 0;
+  ORDER_UPDATE_KIND_NEW = 1;
+  ORDER_UPDATE_KIND_PARTIAL = 2;
+  ORDER_UPDATE_KIND_DONE = 3;
+  ORDER_UPDATE_KIND_CANCELLED = 4;
+}
+
+message ReportOrderUpdateRequest {
+  string idempotency_key = 1;
+  dex.base.v1.Dex dex = 2;
+  string venue = 3;
+  string account_id = 4;
+  string symbol = 5;
+  string order_id = 6;
+  OrderUpdateKind kind = 7;
+  int64 ts_unix_nano = 8;
+}
+
+message ReportOrderUpdateResponse {
+  dex.base.status.v1.Status status = 1;
+  bool duplicate = 2;
+}
+
+// --- Kill switch ---
+
+message HubKillSwitchState {
+  bool global_halt = 1;
+  map<string, bool> halt_venue = 2;
+  map<string, bool> halt_account = 3;
+}
+
+message SetKillSwitchRequest {
+  HubKillSwitchState desired = 1;
+}
+
+message SetKillSwitchResponse {
+  dex.base.status.v1.Status status = 1;
+  HubKillSwitchState applied = 2;
+}
+
+message GetKillSwitchRequest {}
+
+message GetKillSwitchResponse {
+  dex.base.status.v1.Status status = 1;
+  HubKillSwitchState state = 2;
+}
