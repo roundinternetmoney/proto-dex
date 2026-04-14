@@ -1,5 +1,6 @@
 module roundinternet.money/protos
 
+// v0.2.0 — dex.hub.v1 Service + NATS micro stubs
 go 1.25.3
 
 require (
